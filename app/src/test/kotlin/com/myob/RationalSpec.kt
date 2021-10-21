@@ -22,7 +22,7 @@ class RationalSpec : WordSpec({
             -Rational(1, 2) shouldBe Rational(-1, 2)
         }
 
-        "support opertions" {
+        "support operations" {
             Rational(1, 2) + Rational(1, 2) shouldBe Rational(1, 1)
             Rational(1, 2) - Rational(1, 2) shouldBe Rational(0, 1)
             Rational(1, 2) * 2 shouldBe Rational(1, 1)

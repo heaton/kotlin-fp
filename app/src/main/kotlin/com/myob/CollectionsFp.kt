@@ -3,14 +3,14 @@ package com.myob
 import java.math.BigDecimal
 
 object CollectionsFp {
-    fun sumOf(intList: List<Int>): Int = fold(0, { b, a -> a + b }, intList)
+    fun sumOf(intList: List<Int>): Int = fold(0, { acc, a -> acc + a}, intList)
 
-    fun sumOf(numList: List<BigDecimal>): BigDecimal = fold(BigDecimal(0), { b, a -> a + b }, numList)
+    fun sumOf(numList: List<BigDecimal>): BigDecimal = fold(BigDecimal(0), { acc, a -> acc + a}, numList)
 
-    fun sumOf(stringList: List<String>): String = fold("", { b, a -> a + b }, stringList)
+    fun sumOf(stringList: List<String>): String = fold("", { acc, a -> acc + a }, stringList)
 
-    fun <T, R> fold(initialValue: R, a: (R, T) -> R, list: List<T>): R =
-        if (list.isEmpty()) initialValue else a(fold(initialValue, a, list.drop(1)), list.first())
+    fun <T, R> fold(acc: R, f: (R, T) -> R, list: List<T>): R =
+        if (list.isEmpty()) acc else fold(f(acc, list.first()), f, list.drop(1))
 
     fun doubleOf(intList: List<Int>): List<Int> =
         fold(emptyList(), { acc, a -> acc + (a * 2) }, intList)

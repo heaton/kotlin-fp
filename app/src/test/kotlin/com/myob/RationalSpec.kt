@@ -13,7 +13,7 @@ class RationalSpec : WordSpec({
         }
 
         "display 1 for 1/1" {
-            Rational(1, 1).show() shouldBe "1"
+            Rational(1).show() shouldBe "1"
         }
 
         "compare the rational numbers" {
@@ -25,8 +25,8 @@ class RationalSpec : WordSpec({
         "support operations" {
             Rational(1, 2) + Rational(1, 2) shouldBe Rational(1, 1)
             Rational(1, 2) - Rational(1, 2) shouldBe Rational(0, 1)
-            Rational(1, 2) * 2 shouldBe Rational(1, 1)
-            Rational(1, 1) / 2 shouldBe Rational(1, 2)
+            Rational(1, 2) * Rational(2) shouldBe Rational(1, 1)
+            Rational(1, 1) / Rational(2) shouldBe Rational(1, 2)
         }
 
         "throw error for x/0" {

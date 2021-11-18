@@ -9,9 +9,16 @@ object CollectionsFp {
 
     fun sumOf(stringList: List<String>): String = fold("", { acc, a -> acc + a }, stringList)
 
-    fun doubleOf(intList: List<Int>): List<Int> = map(intList) { it * 2 }
+    //    private fun times(n: Int): (List<Int>) -> List<Int> = { intList -> map(intList) { it * n } }
+    private fun t(n: Int, list: List<Int>): List<Int> = map(list) { it * n }
 
-    fun tripleOf(intList: List<Int>): List<Int> = map(intList) { it * 3 }
+    val times = curred(::t)
+
+    val doubleOf = times(2)
+
+    val tripleOf = times(3)
+
+    private fun <A, B, R> curred(f: (A, B) -> R): (A) -> (B) -> R = { a -> { b -> f(a, b) } }
 
     private fun <T, R> map(list: List<T>, f: (T) -> R): List<R> =
         fold(emptyList(), { acc, a -> acc + f(a) }, list)
@@ -22,7 +29,7 @@ object CollectionsFp {
         fold(emptyList(), { acc, i -> if (f(i)) acc + i else acc }, list)
 
     private fun <T, R> mapWithFilter(list: List<T>, f1: (T) -> Boolean, f2: (T) -> R): List<R> =
-        fold(emptyList(), {acc, i -> if(f1(i)) acc + f2(i) else acc}, list)
+        fold(emptyList(), { acc, i -> if (f1(i)) acc + f2(i) else acc }, list)
 
     fun oddOf(list: List<Int>): List<Int> = filter(list) { it % 2 != 0 }
 

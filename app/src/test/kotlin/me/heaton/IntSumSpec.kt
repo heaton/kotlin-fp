@@ -1,6 +1,6 @@
-package com.myob
+package me.heaton
 
-import com.myob.IntSum.sumUp
+import me.heaton.IntSum.sumUp
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
 

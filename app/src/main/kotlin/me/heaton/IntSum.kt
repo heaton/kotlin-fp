@@ -1,4 +1,4 @@
-package com.myob
+package me.heaton
 
 object IntSum {
     fun sumUp(from: Int, to: Int): Int =

@@ -1,5 +1,6 @@
-package com.myob
+package me.heaton
 
+import me.heaton.Currier.curred
 import java.math.BigDecimal
 
 object CollectionsFp {
@@ -10,15 +11,13 @@ object CollectionsFp {
     fun sumOf(stringList: List<String>): String = fold("", { acc, a -> acc + a }, stringList)
 
     //    private fun times(n: Int): (List<Int>) -> List<Int> = { intList -> map(intList) { it * n } }
-    private fun t(n: Int, list: List<Int>): List<Int> = map(list) { it * n }
+    private fun multiple(n: Int, list: List<Int>): List<Int> = map(list) { it * n }
 
-    val times = curred(::t)
+    val times = curred(CollectionsFp::multiple)
 
     val doubleOf = times(2)
 
     val tripleOf = times(3)
-
-    private fun <A, B, R> curred(f: (A, B) -> R): (A) -> (B) -> R = { a -> { b -> f(a, b) } }
 
     private fun <T, R> map(list: List<T>, f: (T) -> R): List<R> =
         fold(emptyList(), { acc, a -> acc + f(a) }, list)
@@ -33,7 +32,7 @@ object CollectionsFp {
 
     fun oddOf(list: List<Int>): List<Int> = filter(list) { it % 2 != 0 }
 
-    fun <T, R> fold(acc: R, f: (R, T) -> R, list: List<T>): R =
+    private fun <T, R> fold(acc: R, f: (R, T) -> R, list: List<T>): R =
         if (list.isEmpty()) acc else fold(f(acc, list.first()), f, list.drop(1))
 
     fun <T, R> foldOo(acc: R, f: (R, T) -> R, list: List<T>): R {

@@ -1,4 +1,4 @@
-package com.myob
+package me.heaton
 
 class Rational(x: Int, y: Int) {
     init {

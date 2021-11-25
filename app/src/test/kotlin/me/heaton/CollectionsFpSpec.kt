@@ -1,10 +1,10 @@
-package com.myob
+package me.heaton
 
-import com.myob.CollectionsFp.doubleOf
-import com.myob.CollectionsFp.evenOf
-import com.myob.CollectionsFp.oddOf
-import com.myob.CollectionsFp.sumOf
-import com.myob.CollectionsFp.tripleOf
+import me.heaton.CollectionsFp.doubleOf
+import me.heaton.CollectionsFp.evenOf
+import me.heaton.CollectionsFp.oddOf
+import me.heaton.CollectionsFp.sumOf
+import me.heaton.CollectionsFp.tripleOf
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
 import java.math.BigDecimal

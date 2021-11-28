@@ -55,5 +55,12 @@ class ImListSpec : WordSpec({
                 imListOf(3, 4).map { y -> x * y }
             }.toList() shouldBe listOf(3, 4, 6, 8)
         }
+
+        "group by" {
+            imListOf(1, 2, 3, 4, 5).groupBy { it % 2 }.mapValues { it.value.toList() } shouldBe mapOf(
+                Pair(0, listOf(2, 4)),
+                Pair(1, listOf(1, 3, 5))
+            )
+        }
     }
 })

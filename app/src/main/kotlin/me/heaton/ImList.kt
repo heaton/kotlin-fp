@@ -56,3 +56,7 @@ infix fun <T> ImList<T>.intersect(other: ImList<T>) = filter(other.toSet()::cont
 fun <T> ImList<ImList<T>>.flatten() = fold(emptyImList(), ImList<T>::plus)
 
 infix fun <T> ImList<T>.flatMap(f: (T) -> ImList<T>) = map(f).flatten()
+
+infix fun <T, K> ImList<T>.groupBy(f: (T) -> K): Map<K, ImList<T>> = foldRight(emptyMap()) { map, e ->
+    f(e).let { key -> map + Pair(key, map.getOrDefault(key, emptyImList()) ahead e) }
+}

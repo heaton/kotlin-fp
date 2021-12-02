@@ -25,10 +25,10 @@ fun <T> immutableListOf(vararg items: T): ImmutableList<T> =
 
 fun <T> ImmutableList<T>.toList(): List<T> = fold(emptyList(), List<T>::plus)
 
-fun <T> ImmutableList<T>.reverse(): ImmutableList<T>
-
 fun <T, R> ImmutableList<T>.map(f: (T) -> R): ImmutableList<R> =
     foldRight(emptyImmutableList()) { acc, e -> NonEmptyImmutableList(f(e), acc) }
+
+fun <T> ImmutableList<T>.reverse(): ImmutableList<T>
 
 fun <T> ImmutableList<T>.filter(f: (T) -> Boolean): ImmutableList<T>
 

@@ -1,33 +1,25 @@
 package me.heaton
 
-import java.util.NoSuchElementException
-
 sealed interface ImList<T> {
-    fun head(): T
-    fun tail(): ImList<T>
     fun <R> fold(acc: R, f: (R, T) -> R): R
     fun <R> foldRight(acc: R, f: (R, T) -> R): R
+    infix fun <O> zip(other: ImList<O>): ImList<Pair<T, O>>
 }
 
 class EmptyImList<T> : ImList<T> {
-    override fun head(): T {
-        throw NoSuchElementException("it is empty")
-    }
-
-    override fun tail(): ImList<T> {
-        throw NoSuchElementException("it is empty")
-    }
-
     override fun <R> fold(acc: R, f: (R, T) -> R): R = acc
     override fun <R> foldRight(acc: R, f: (R, T) -> R): R = acc
+    override fun <O> zip(other: ImList<O>): ImList<Pair<T, O>> = EmptyImList()
+    override fun equals(other: Any?): Boolean = other != null && javaClass === other.javaClass
+    override fun hashCode(): Int = 0
 }
 
-class NonEmptyImList<T>(private val e: T, private val tail: ImList<T>) : ImList<T> {
-    override fun head(): T = e
-    override fun tail(): ImList<T> = tail
-
+data class NonEmptyImList<T>(private val e: T, private val tail: ImList<T>) : ImList<T> {
     override fun <R> fold(acc: R, f: (R, T) -> R): R = tail.fold(f(acc, e), f)
     override fun <R> foldRight(acc: R, f: (R, T) -> R): R = f(tail.foldRight(acc, f), e)
+    override fun <O> zip(other: ImList<O>): ImList<Pair<T, O>> =
+        if (other is NonEmptyImList) NonEmptyImList(Pair(e, other.e), tail.zip(other.tail))
+        else EmptyImList()
 }
 
 fun <T> emptyImList(): ImList<T> = EmptyImList()
@@ -55,7 +47,13 @@ infix fun <T> ImList<T>.intersect(other: ImList<T>) = filter(other.toSet()::cont
 
 fun <T> ImList<ImList<T>>.flatten() = fold(emptyImList(), ImList<T>::plus)
 
-infix fun <T> ImList<T>.flatMap(f: (T) -> ImList<T>) = map(f).flatten()
+infix fun <T, R> ImList<T>.flatMap(f: (T) -> ImList<R>) = map(f).flatten()
+
+operator fun <T, O> ImList<T>.times(other: ImList<O>): ImList<Pair<T, O>> = flatMap { a ->
+    other.map { b ->
+        Pair(a, b)
+    }
+}
 
 infix fun <T, K> ImList<T>.groupBy(f: (T) -> K): Map<K, ImList<T>> = foldRight(emptyMap()) { map, e ->
     f(e).let { key -> map + Pair(key, map.getOrDefault(key, emptyImList()) ahead e) }

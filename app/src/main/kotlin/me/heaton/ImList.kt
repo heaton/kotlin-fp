@@ -18,7 +18,7 @@ data class NonEmptyImList<T>(private val e: T, private val tail: ImList<T>) : Im
     override fun <R> fold(acc: R, f: (R, T) -> R): R = tail.fold(f(acc, e), f)
     override fun <R> foldRight(acc: R, f: (R, T) -> R): R = f(tail.foldRight(acc, f), e)
     override fun <O> zip(other: ImList<O>): ImList<Pair<T, O>> =
-        if (other is NonEmptyImList) NonEmptyImList(Pair(e, other.e), tail.zip(other.tail))
+        if (other is NonEmptyImList) NonEmptyImList(e to other.e, tail.zip(other.tail))
         else EmptyImList()
 }
 

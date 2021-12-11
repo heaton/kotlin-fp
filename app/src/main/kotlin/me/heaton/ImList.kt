@@ -50,11 +50,9 @@ fun <T> ImList<ImList<T>>.flatten() = fold(emptyImList(), ImList<T>::plus)
 infix fun <T, R> ImList<T>.flatMap(f: (T) -> ImList<R>) = map(f).flatten()
 
 operator fun <T, O> ImList<T>.times(other: ImList<O>): ImList<Pair<T, O>> = flatMap { a ->
-    other.map { b ->
-        Pair(a, b)
-    }
+    other.map { b -> a to b }
 }
 
 infix fun <T, K> ImList<T>.groupBy(f: (T) -> K): Map<K, ImList<T>> = foldRight(emptyMap()) { map, e ->
-    f(e).let { key -> map + Pair(key, map.getOrDefault(key, emptyImList()) ahead e) }
+    f(e).let { key -> map + (key to (map.getOrDefault(key, emptyImList()) ahead e)) }
 }

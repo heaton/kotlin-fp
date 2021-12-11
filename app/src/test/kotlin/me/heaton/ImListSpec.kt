@@ -19,6 +19,7 @@ class ImListSpec : WordSpec({
 
         "map" {
             imListOf(1, 2, 3).map { it * 2 } shouldBe imListOf(2, 4, 6)
+            imListOf(1, 2, 3).map(Int::toString) shouldBe imListOf("1", "2", "3")
         }
 
         "filter" {
@@ -53,8 +54,8 @@ class ImListSpec : WordSpec({
 
         "group by" {
             imListOf(1, 2, 3, 4, 5).groupBy { it % 2 } shouldBe mapOf(
-                Pair(0, imListOf(2, 4)),
-                Pair(1, imListOf(1, 3, 5))
+                0 to imListOf(2, 4),
+                1 to imListOf(1, 3, 5)
             )
         }
 

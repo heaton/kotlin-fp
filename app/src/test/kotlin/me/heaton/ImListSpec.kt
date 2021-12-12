@@ -2,9 +2,14 @@ package me.heaton
 
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
+import me.heaton.CollectionsFpBlog.split
 
 class ImListSpec : WordSpec({
     "Immutable list" should {
+        "size" {
+            imListOf(1, 2, 3).size shouldBe 3
+        }
+
         "toList" {
             imListOf(1, 2, 1, 3).toList() shouldBe listOf(1, 2, 1, 3)
         }
@@ -65,6 +70,20 @@ class ImListSpec : WordSpec({
 
         "zip" {
             imListOf(1, 2, 3) zip imListOf(2, 4, 8) shouldBe imListOf(Pair(1, 2), Pair(2, 4), Pair(3, 8))
+        }
+
+        "partition" {
+            imListOf(1, 2, 3) partition { it % 2 != 0 } shouldBe (imListOf(1, 3) to imListOf(2))
+        }
+
+        "split" {
+            imListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12) split 5 shouldBe imListOf(
+                imListOf(1, 2, 3),
+                imListOf(4, 5, 6),
+                imListOf(7, 8),
+                imListOf(9, 10),
+                imListOf(11, 12)
+            )
         }
     }
 })

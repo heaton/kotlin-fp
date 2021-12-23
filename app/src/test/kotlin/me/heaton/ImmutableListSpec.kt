@@ -14,7 +14,19 @@ class ImmutableListSpec : WordSpec({
         }
 
         "map" {
-            immutableListOf(1, 2, 3).map {it * 2}.toList() shouldBe listOf(2, 4, 6)
+            immutableListOf(1, 2, 3).map { it * 2 } shouldBe immutableListOf(2, 4, 6)
+        }
+
+        "reverse" {
+            immutableListOf(1, 2, 3).reverse() shouldBe immutableListOf(3, 2, 1)
+        }
+
+        "filter" {
+            immutableListOf(1, 2, 3) filter { it % 2 != 0 } shouldBe immutableListOf(1, 3)
+        }
+
+        "+" {
+            immutableListOf(1, 2, 3) + immutableListOf(4, 5) shouldBe immutableListOf(1, 2, 3, 4, 5)
         }
     }
 })

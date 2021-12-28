@@ -7,6 +7,7 @@ sealed interface ImList<T> {
     fun <R> fold(acc: R, f: (R, T) -> R): R
     fun <R> foldRight(acc: R, f: (R, T) -> R): R
     infix fun <O> zip(other: ImList<O>): ImList<Pair<T, O>>
+    fun reduce(f: (T, T) -> T): T
 }
 
 class EmptyImList<T> : ImList<T> {
@@ -16,6 +17,7 @@ class EmptyImList<T> : ImList<T> {
     override fun <O> zip(other: ImList<O>): ImList<Pair<T, O>> = EmptyImList()
     override fun equals(other: Any?): Boolean = other != null && javaClass === other.javaClass
     override fun hashCode(): Int = 0
+    override fun reduce(f: (T, T) -> T): T = throw IllegalCallerException("reduce can not be called on an empty list")
 }
 
 data class NonEmptyImList<T>(private val e: T, private val tail: ImList<T>, override val size: Int) : ImList<T> {
@@ -24,6 +26,8 @@ data class NonEmptyImList<T>(private val e: T, private val tail: ImList<T>, over
     override fun <O> zip(other: ImList<O>): ImList<Pair<T, O>> =
         if (other is NonEmptyImList) NonEmptyImList(e to other.e, tail.zip(other.tail), size)
         else EmptyImList()
+
+    override fun reduce(f: (T, T) -> T): T = tail.fold(e, f)
 }
 
 fun <T> emptyImList(): ImList<T> = EmptyImList()
@@ -74,3 +78,26 @@ infix fun <T> ImList<T>.split(n: Int): ImList<ImList<T>> =
                 SplitHelper(acc, eacc ahead e, s - 1, r, i - 1)
         }
     }.acc
+
+class MyThread<R>(private val f: () -> R) {
+    private var r: R? = null
+    private val t = Thread { r = f() }
+
+    fun start(): MyThread<R> {
+        t.start()
+        return this
+    }
+
+    fun value(): R {
+        t.join()
+        return r!!
+    }
+}
+
+fun <T, R> ImList<T>.parFold(acc: R, f: (R, T) -> R, reducer: (R, R) -> R): R =
+    Runtime.getRuntime().availableProcessors().let { n ->
+        if (n == 1) fold(acc, f)
+        else split(n).map {
+            MyThread { it.fold(acc, f) }.start()
+        }.map(MyThread<R>::value).reduce(reducer)
+    }

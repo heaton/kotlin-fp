@@ -85,5 +85,9 @@ class ImListSpec : WordSpec({
                 imListOf(11, 12)
             )
         }
+
+        "par fold" {
+            (1..100).fold(emptyImList(), ImList<Int>::ahead).parFold(0, Int::plus, Int::plus) shouldBe 5050
+        }
     }
 })

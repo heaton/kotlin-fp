@@ -96,7 +96,7 @@ class MyThread<R>(private val f: () -> R) {
 
 fun <T, R> ImList<T>.parFold(acc: R, f: (R, T) -> R, reducer: (R, R) -> R): R =
     Runtime.getRuntime().availableProcessors().let { n ->
-        if (n == 1) fold(acc, f)
+        if (n == 1 || size < 10) fold(acc, f)
         else split(n).map {
             MyThread { it.fold(acc, f) }.start()
         }.map(MyThread<R>::value).reduce(reducer)
